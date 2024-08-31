@@ -23,7 +23,7 @@ public class AssetExportCollection<T> : ExportCollection where T : IUnityObjectB
 		bool result = ExportInner(container, filePath, projectDirectory, fileSystem);
 		if (result)
 		{
-			Meta meta = new Meta(GUID, CreateImporter(container));
+			Meta meta = new Meta(GUID, CreateImporter(container), Asset);
 			ExportMeta(container, meta, filePath, fileSystem);
 			return true;
 		}
