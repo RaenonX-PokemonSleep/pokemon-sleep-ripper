@@ -26,7 +26,7 @@ namespace AssetRipper.Export.UnityProjects
 			bool result = ExportInner(container, filePath, projectDirectory);
 			if (result)
 			{
-				Meta meta = new Meta(GUID, CreateImporter(container));
+				Meta meta = new Meta(GUID, CreateImporter(container), Asset);
 				ExportMeta(container, meta, filePath);
 				return true;
 			}
