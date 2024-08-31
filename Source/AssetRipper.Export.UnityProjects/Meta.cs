@@ -43,7 +43,6 @@ public readonly struct Meta
 		}
 		if (HasLicenseData)
 		{
-			root.Add(TimeCreatedName, CurrentTick);
 			root.Add(LicenseTypeName, "Free");
 		}
 		//if (Importer.IncludesImporter(container.ExportVersion)) //For now, assume true
@@ -57,10 +56,6 @@ public readonly struct Meta
 	public bool IsFolderAsset { get; }
 	public bool HasLicenseData { get; }
 	public IUnityObjectBase Importer { get; }
-
-	private const long UnityEpoch = 0x089f7ff5f7b58000;
-
-	private static long CurrentTick => (DateTime.Now.Ticks - UnityEpoch) / 10000000;
 
 	public const string FileFormatVersionName = "fileFormatVersion";
 	public const string GuidName = "guid";
