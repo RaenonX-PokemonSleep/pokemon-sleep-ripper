@@ -43,7 +43,6 @@ namespace AssetRipper.Export.UnityProjects
 			}
 			if (HasLicenseData)
 			{
-				root.Add(TimeCreatedName, CurrentTick);
 				root.Add(LicenseTypeName, "Free");
 			}
 			//if (Importer.IncludesImporter(container.ExportVersion)) //For now, assume true
@@ -58,14 +57,9 @@ namespace AssetRipper.Export.UnityProjects
 		public bool HasLicenseData { get; }
 		public IUnityObjectBase Importer { get; }
 
-		private const long UnityEpoch = 0x089f7ff5f7b58000;
-
-		private static long CurrentTick => (DateTime.Now.Ticks - UnityEpoch) / 10000000;
-
 		public const string FileFormatVersionName = "fileFormatVersion";
 		public const string GuidName = "guid";
 		public const string FolderAssetName = "folderAsset";
-		public const string TimeCreatedName = "timeCreated";
 		public const string LicenseTypeName = "licenseType";
 	}
 }
