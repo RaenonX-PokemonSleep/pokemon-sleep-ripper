@@ -95,7 +95,7 @@ public sealed partial class ProjectExporter
 			if (collection.Exportable)
 			{
 				currentExportable++;
-				Logger.Info(LogCategory.ExportProgress, $"({currentExportable}/{exportableCount}) Exporting '{collection.Name}'");
+				Logger.Info(LogCategory.ExportProgress, $"({currentExportable}/{exportableCount} ({currentExportable * 100 / exportableCount}%)) Exporting '{collection.Name}'");
 				bool exportedSuccessfully = collection.Export(container, options.ProjectRootPath, fileSystem);
 				if (!exportedSuccessfully)
 				{
