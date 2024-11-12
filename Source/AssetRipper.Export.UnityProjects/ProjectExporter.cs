@@ -86,6 +86,8 @@ namespace AssetRipper.Export.UnityProjects
 
 			EventExportStarted?.Invoke();
 			ProjectAssetContainer container = new ProjectAssetContainer(this, options, fileCollection.FetchAssets(), collections);
+			int totalExportable = collections.FindAll(col => col.Exportable).Count();
+			int exportedCount = 0;
 			for (int i = 0; i < collections.Count; i++)
 			{
 				IExportCollection collection = collections[i];
@@ -93,6 +95,9 @@ namespace AssetRipper.Export.UnityProjects
 				if (collection.Exportable)
 				{
 					Logger.Info(LogCategory.ExportProgress, $"Exporting '{collection.Name}'");
+					if(exportedCount % 100 == 0)
+						Console.WriteLine($"Exporting... {exportedCount}/{totalExportable} ({exportedCount * 100 / totalExportable}%)");
+					exportedCount++;
 					bool exportedSuccessfully = collection.Export(container, options.ProjectRootPath);
 					if (!exportedSuccessfully)
 					{
@@ -101,6 +106,7 @@ namespace AssetRipper.Export.UnityProjects
 				}
 				EventExportProgressUpdated?.Invoke(i, collections.Count);
 			}
+			Console.WriteLine($"Exporting... {totalExportable}/{totalExportable} (100%)");
 			EventExportFinished?.Invoke();
 		}
 
