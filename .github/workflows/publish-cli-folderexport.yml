@@ -1,0 +1,39 @@
+name: Publish-CLI-FolderExport
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+  workflow_dispatch:
+
+jobs:
+  publish:
+    runs-on: ${{ matrix.config.os }}
+
+    strategy:
+      matrix:
+        config:
+          - { name: win_x64, os: windows-latest, runtime: win-x64, executable: AssetRipper.CLI.FolderExport.exe }
+          - { name: win_arm64, os: windows-latest, runtime: win-arm64, executable: AssetRipper.CLI.FolderExport.exe }
+          - { name: linux_x64, os: ubuntu-latest, runtime: linux-x64, executable: AssetRipper.CLI.FolderExport }
+          - { name: mac_x64, os: macos-latest, runtime: osx-x64, executable: AssetRipper.CLI.FolderExport }
+          - { name: mac_arm64, os: macos-latest, runtime: osx-arm64, executable: AssetRipper.CLI.FolderExport }
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 9.0.x
+
+      - name: Publish
+        run: dotnet publish -c Release -r ${{ matrix.config.runtime }} --self-contained
+        working-directory: ./Source/AssetRipper.CLI.FolderExport/
+
+      - name: Upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: AssetRipper_CLI_FolderExport_${{ matrix.config.name }}
+          path: ./Source/AssetRipper.CLI.FolderExport/bin/Release/${{ matrix.config.runtime }}/publish/${{ matrix.config.executable }}
+          if-no-files-found: error

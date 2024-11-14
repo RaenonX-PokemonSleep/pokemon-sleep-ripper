@@ -40,6 +40,7 @@ public class ExportHandler
 		}
 
 		GameStructure gameStructure = GameStructure.Load(paths, Settings);
+		Console.WriteLine("Finished Loading game structure");
 		GameData gameData = GameData.FromGameStructure(gameStructure);
 		Logger.Info(LogCategory.Import, "Finished reading files");
 		return gameData;
@@ -78,6 +79,7 @@ public class ExportHandler
 
 	public void Export(GameData gameData, string outputPath)
 	{
+		Console.WriteLine("Starting export...");
 		Logger.Info(LogCategory.Export, "Starting export");
 		Logger.Info(LogCategory.Export, $"Attempting to export assets to {outputPath}...");
 		Logger.Info(LogCategory.Export, $"Game files have these Unity versions:{GetListOfVersions(gameData.GameBundle)}");
@@ -124,7 +126,9 @@ public class ExportHandler
 
 	public GameData LoadAndProcess(IReadOnlyList<string> paths)
 	{
+		Console.WriteLine($"Loading game data from paths [{string.Join(", ", paths)}]...");
 		GameData gameData = Load(paths);
+		Console.WriteLine("Processing game data...");
 		Process(gameData);
 		return gameData;
 	}

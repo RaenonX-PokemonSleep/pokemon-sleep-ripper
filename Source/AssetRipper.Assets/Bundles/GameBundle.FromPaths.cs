@@ -24,19 +24,25 @@ partial class GameBundle
 		initializer?.OnCreated(gameBundle, assetFactory);
 		gameBundle.InitializeFromPaths(paths, assetFactory, initializer);
 		initializer?.OnPathsLoaded(gameBundle, assetFactory);
+		Console.WriteLine("Initializing dependency lists...");
 		gameBundle.InitializeAllDependencyLists(initializer?.DependencyProvider);
 		initializer?.OnDependenciesInitialized(gameBundle, assetFactory);
 		return gameBundle;
 	}
-
+	
 	private void InitializeFromPaths(IEnumerable<string> paths, AssetFactoryBase assetFactory, IGameInitializer? initializer)
 	{
 		ResourceProvider = initializer?.ResourceProvider;
 		List<FileBase> fileStack = LoadFilesAndDependencies(paths, initializer?.DependencyProvider);
+		int totalFiles = fileStack.Count;
+		int processedFiles = 0;
 		UnityVersion defaultVersion = initializer is null ? default : initializer.DefaultVersion;
 
 		while (fileStack.Count > 0)
 		{
+			if(processedFiles % 100 == 0)
+				Console.WriteLine($"Bundling file... {processedFiles}/{totalFiles} ({(processedFiles * 100 / totalFiles)}%)");
+
 			switch (RemoveLastItem(fileStack))
 			{
 				case SerializedFile serializedFile:
@@ -53,7 +59,11 @@ partial class GameBundle
 					AddFailed(failedFile);
 					break;
 			}
+
+			processedFiles++;
 		}
+
+		Console.WriteLine($"Bundling file... {processedFiles}/{totalFiles} [100%]");
 	}
 
 	private static FileBase RemoveLastItem(List<FileBase> list)
